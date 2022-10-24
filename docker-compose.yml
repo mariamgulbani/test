@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - ./app/src:/home/app/app/src
+      - tmp-public:/home/app/public
+    command: npm run watch
+  database:
+    image: mongo
+    restart: always
+    ports:
+      - "127.0.0.1:27017:27017"
+  server:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - ./server:/home/app/server
+      - tmp-public:/home/app/public
+    command: npm start
+    environment:
+      - NODE_ENV=localhost
+
+    ports:
+      - "127.0.0.1:8089:8088"
+    depends_on:
+      - app
+      - database
+volumes:
+  tmp-public:
