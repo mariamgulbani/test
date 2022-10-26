@@ -1,6 +1,7 @@
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const {GenerateSW} = require('workbox-webpack-plugin');
 const dir = path.resolve(__dirname)+'/app';
 
 module.exports = (env, argv) => ({
@@ -50,7 +51,8 @@ module.exports = (env, argv) => ({
                     ],
                 },
             },
-        },],
+        },
+        ],
     },
     plugins: [
         new CopyPlugin([
@@ -62,7 +64,36 @@ module.exports = (env, argv) => ({
             template: dir + '/src/index.html',
             filename: dir + '/../public/index.html',
             scriptLoading: 'defer',
-        })
-    ]
+        }),
+        new GenerateSW({
+            exclude: [
+                /node_modules\/(.*)\.(?!(js$))/,
+                /assets\/(.*)\.(woff2|woff|ttf|eot|otf|jpg|jpeg|png)$/,
+            ],
+            runtimeCaching: [
+                {
+                    // Routing via a matchCallback function:
+                    urlPattern: /^.*\.(json|js|css|html)$/,
+                    handler: 'StaleWhileRevalidate',
+                },
+                {
+                    urlPattern: /^.*\.(woff2|woff|ttf|eot|otf|jpg|jpeg|png|svg)$/,
+                    handler: 'CacheFirst',
+                },
+                ],
+                swDest: dir +'/dist/service-worker.js',
+                skipWaiting: true,
+                clientsClaim: true,
+                navigateFallbackDenylist:[
+                    /\/api\//,
+                    /\/media\//,
+                    /\/share\//,
+                    /\/worker/,
+                ],
+                navigateFallback:'/index.html',
+                sourcemap: false
 
-})
+
+    }),
+],
+});

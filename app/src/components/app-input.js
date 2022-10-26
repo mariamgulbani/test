@@ -1,3 +1,5 @@
+import {LitElement, html, css} from "lit-element";
+
 // const template = `
 // <template id ="input">
 //
@@ -16,34 +18,90 @@
 // `;
 
 
-class AppInput extends HTMLElement{
+class AppInput extends LitElement{
     static get is() {
         return 'app-input';
+    }
+    static get properties() {
+        return {
+            name:{
+                type:String,
+                reflect: true,
+                hasChanged(newValue,oldValue){
+                    if (newValue === oldValue){
+                        return false
+                    }
+                    else return true;
+                }
+            }
+        }
+
     }
 
     constructor() {
         super();
-        this.attachShadow({mode:"open"});
-        this.shadowRoot.innerHTML = '<input>';
+
+
     }
     connectedCallback(){
+        super.connectedCallback();
         console.log('Connected');
 
     }
 
     disconnectedCallback(){
+        super.disconnectedCallback();
         console.log('Disconnected');
 
 
     }
-
-    attributeChangedCallback(name, oldValue, newValue){
-        console.log('attribute changed.');
+    render(){
+        return html`<input type="text">`
     }
-
-    static  get observedAttributes(){
-        return ['name','value'];
-    }
-
 }
 customElements.define(AppInput.is,AppInput);
+
+
+
+class UserInfo extends LitElement{
+    static get is() {
+        return 'user-input';
+    }
+    static get properties() {
+        return {
+            name:{
+                type:String,
+                reflect: true,
+                hasChanged(newValue,oldValue){
+                    if (newValue === oldValue){
+                        return false
+                    }
+                    else return true;
+                }
+            }
+        }
+
+    }
+
+    constructor() {
+        super();
+
+
+    }
+    connectedCallback(){
+        super.connectedCallback();
+        console.log('Connected');
+
+    }
+
+    disconnectedCallback(){
+        super.disconnectedCallback();
+        console.log('Disconnected');
+
+
+    }
+    render(){
+        return html`<input type="text">`
+    }
+}
+customElements.define(UserInfo.is,UserInfo);

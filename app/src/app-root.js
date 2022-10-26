@@ -1,5 +1,6 @@
 import './components/app-input.js';
 
+
 class AppRoot extends HTMLElement{
     static get is() {
         return 'app-root';
@@ -12,7 +13,7 @@ class AppRoot extends HTMLElement{
             
                 :host {
         
-                    border: 6px solid red;
+                    border: 6px solid blue;
         
                 }
         
@@ -25,6 +26,7 @@ class AppRoot extends HTMLElement{
             </style>
             
             <app-input></app-input><br>
+            <user-input></user-input><br>
         `;
     }
 
