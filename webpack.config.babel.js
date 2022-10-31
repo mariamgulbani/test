@@ -81,7 +81,7 @@ module.exports = (env, argv) => ({
                     handler: 'CacheFirst',
                 },
                 ],
-                swDest: dir +'/dist/service-worker.js',
+                swDest: dir +'/../public/service-worker.js',
                 skipWaiting: true,
                 clientsClaim: true,
                 navigateFallbackDenylist:[

@@ -1,23 +1,37 @@
 import {MongoClient, ObjectId} from "mongodb";
 import {Connection} from "../connection.js";
-import {Users} from "../modules/users.js";
+import {User} from "../modules/user.js";
 import express from 'express';
 import {fileURLToPath} from 'url';
 import {dirname} from 'path';
+import bodyParser from "body-parser";
 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const app = express();
+const modules = {
+    client: User,
+}
 
 app.use(express.static('public'));
-app.all('/api/users/login',(req,res)=>{
-    console.log(req.query,req.body);
-    res.status(200).send(['sbxn'])
-});
+
+// app.all('/api/users/login',(req,res)=>{
+//     console.log(req.query,req.body);
+//     res.status(200).send(['sbxn'])
+// });
+
+app.use(bodyParser.json());
+app.all('/api/:controller/:method',(req,res)=> {
+    if (req.params.controller){
+        modules[req.params.controller][req.params.method].call(null,req,res,req.body);
+    }
+})
+
 app.get(['/*','/'],(req, res) => {
     res.sendFile(__dirname + '/public/index.html');
 });
+
 app.listen(8088,() => {
     console.log('App is running...');
 });
@@ -29,27 +43,6 @@ MongoClient.connect('mongodb://database:27017', (error, client) => {
     }
 
     Connection.set(client.db('bog_test'));
-    Connection.db.collection('users');
-     // .insertMany([
-     //     {
-     //         name: 'temur',
-     //         surname: 'kvirkvelia',
-     //         email: 'tkvirkvelia@bog.ge',
-     //         phone: '22222'
-     //     },
-     //     {
-     //         name: 'mariam',
-     //         surname: 'gulbani',
-     //         email: 'mgulbani@bog.ge',
-     //         phone: '33333'
-     //     },
-     //     {
-     //         name: 'jemal',
-     //         surname: 'tadumadze',
-     //         email: 'jtadumadze@bog.ge',
-     //         phone: '11111'
-     //     }]);
-     //    .deleteOne({_id : ''})
 
     console.log('Connected to database....');
 })
