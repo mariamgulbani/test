@@ -1,6 +1,7 @@
 import {BaseElement,html} from "../../core/base-element.js";
 import './app-users-form.js';
 import './app-users-list.js';
+import {RestClient} from "../../core/rest.js";
 
 class AppUsersModule extends BaseElement{
     static get is() {
@@ -20,12 +21,14 @@ class AppUsersModule extends BaseElement{
         return {
             editUser:{type: Object},
             usersList: {type: Array},
+            // deleteUser: {type: Array}
         }
     }
     constructor() {
         super();
-        this.usersList =[];
+        this.usersList = [];
         this.editUser ={};
+        // this.deleteUser =[];
     }
 
     connectedCallback() {
@@ -33,38 +36,56 @@ class AppUsersModule extends BaseElement{
         this.addEventListener('save-user-data',async (event) => {
             // console.log(event.detail);
             await this._saveUserData(event.detail);
-            await this._loadUserList(event.detail);
+            //await this._loadUserList(event.detail);
 
         });
         this.addEventListener('edit-user-data',async (event) => {
-            console.log(event.detail);
+            // console.log(event.detail);
             //console.log(this.editUser);
             //console.log(this.usersList)
             await this._editUserData(event.detail);
+        });
+        this.addEventListener('delete-user-data',async (event) => {
+            console.log(event.detail);
+            //console.log(this.editUser);
+            //console.log(this.usersList)
+            await this._deleteUserData(event.detail);
         })
+
     }
 
     _editUserData(user) {
-         //  this.firstName=data.firstName;
-         // this.lastName=data.lastName;
-         // this.email=data.email;
-         //  this.phoneNumber=data.phoneNumber;
-        // this.editUser.push(user);
-        // this.editUser =[...this.editUser];
+
         this.editUser=user;
+        RestClient.call('/api/client/getClientInfo')
+            .then((result) => this.usersList = result)
+            .catch((error) => console.log(error));
+
+
+    }
+    _deleteUserData(test){
+        RestClient.call('/api/client/deleteClientData',test)
+            .then((result) => console.log(result))
+            .catch((error) => console.log(error));
+        console.log(test._id)
 
     }
 
 
     _saveUserData(user){
-        //console.log(user);
-        this.usersList.push(user);
-        this.usersList =[...this.usersList];
+        RestClient.call('/api/client/registerUser',user)
+            .then(()=> {
+                this.usersList.push(user);
+            })
+            .catch((error)=> {console.log(error)});
+        RestClient.call('/api/client/getClientInfo')
+            .then((result) => this.usersList = result)
+            .catch((error) => console.log(error));
+
+
 
     }
-    _loadUserList(){
 
-    }
 
 
 }

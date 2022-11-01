@@ -1,23 +1,4 @@
-//Connection.db.collection('users');
-// .insertMany([
-//     {
-//         name: 'temur',
-//         surname: 'kvirkvelia',
-//         email: 'tkvirkvelia@bog.ge',
-//         phone: '22222'
-//     },
-//     {
-//         name: 'mariam',
-//         surname: 'gulbani',
-//         email: 'mgulbani@bog.ge',
-//         phone: '33333'
-//     },
-//     {
-//         name: 'jemal',
-//         surname: 'tadumadze',
-//         email: 'jtadumadze@bog.ge',
-//         phone: '11111'
-//     }]);
+
 import {Connection} from "../connection.js";
 
 class User {
@@ -33,22 +14,24 @@ class User {
 
     }
     static async registerUser(req,res,params){
-        res.send({success: true,...params})
-    }
-    static async updateClientData(req,res){
         try {
-            await Connection.db.collection('users').remove();
-            await Connection.db.collection('user').insertMany(
-                [
-                    {
-                        firstName:'Mariami',
-                        lastName:'Gulbani',
-                        email: 'mgulbani@bog.ge',
-                        phone:'2222',
+            await Connection.db.collection("users")
+                .insertMany([
+                    params
+                ])
+            res.status(200).send({});
+        } catch (exception) {
+            console.error(exception.message)
+            res.status(500).send()
+        }
+    }
 
-                    }
-                    ]
-            )
+    static async deleteClientData(req,res,params){
+        try {
+            await Connection.db.collection('users')
+                .deleteOne({params})
+            res.status(200).send({});
+
         } catch (exception) {
             res.status(500).send();
         }
