@@ -1,5 +1,6 @@
 
 import {Connection} from "../connection.js";
+import {ObjectId} from "mongodb";
 
 class User {
     static async getClientInfo(req,res) {
@@ -14,11 +15,34 @@ class User {
 
     }
     static async registerUser(req,res,params){
+
         try {
-            await Connection.db.collection("users")
-                .insertMany([
-                    params
-                ])
+            if (params._id){
+                await Connection.db.collection("users")
+                    .updateOne(
+                        {_id:ObjectId(params._id)},
+                        {
+                            $set: {
+                                firstName:params.firstName,
+                                lastName:params.lastName,
+                                email: params.email,
+                                phoneNumber:params.phoneNumber,
+                                creationDate: new Date(),
+                            },
+                        }
+
+
+                    )
+
+
+            }
+            else{
+                await Connection.db.collection("users")
+                    .insertMany([
+                        params
+                    ])
+            }
+
             res.status(200).send({});
         } catch (exception) {
             console.error(exception.message)
@@ -27,12 +51,14 @@ class User {
     }
 
     static async deleteClientData(req,res,params){
+        console.log(params)
         try {
             await Connection.db.collection('users')
-                .deleteOne({params})
+                .deleteOne({_id: ObjectId(params._id)})
             res.status(200).send({});
 
         } catch (exception) {
+            console.error(exception.message)
             res.status(500).send();
         }
     }

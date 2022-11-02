@@ -38,28 +38,28 @@ class AppUsersForm extends BaseElement{
                 <span> Firstname </span>
                 <input
                         id="firstName"
-                        .value="${this._firstName}"
+                        .value="${this.firstName}"
                         @input="${this._setInputValue}">
             </div>
             <div class="user-form" >
                 <span> Lastname </span>
                 <input
                         id="lastName"
-                        .value="${this._lastName}"
+                        .value="${this.lastName}"
                         @input="${this._setInputValue}">
             </div>
             <div class="user-form" >
                 <span> Email </span>
                 <input
                         id="email"
-                        .value="${this._email}"
+                        .value="${this.email}"
                         @input="${this._setInputValue}">
             </div>
             <div class="user-form" >
                 <span> Phone </span>
                 <input
                         id="phoneNumber"
-                        .value="${this._phoneNumber}"
+                        .value="${this.phoneNumber}"
                         @input="${this._setInputValue}">
             </div>
             <div class="user-save" >
@@ -100,7 +100,11 @@ class AppUsersForm extends BaseElement{
             },
             editUser:{
                 type: Object,
-            }
+            },
+
+            _id: {type:String}
+
+
 
         }
     }
@@ -112,13 +116,12 @@ class AppUsersForm extends BaseElement{
         this.email = '';
         this.phoneNumber = '';
         this.editUser= {};
+        this._id ='';
+
     }
 
 
-    // connectedCallback() {
-    //     super.connectedCallback();
-    //     this.firstName=this.editUser.
-    // }
+
 
 
     _saveUserData(){
@@ -127,16 +130,9 @@ class AppUsersForm extends BaseElement{
             lastName: this.lastName,
             email: this.email,
             phoneNumber: this.phoneNumber,
+            _id: this._id,
         };
         this.sendCustomEvent('save-user-data',user);
-        // RestClient.call('/api/client/registerUser',user)
-        //     .then((result)=> console.log(result))
-        //     .catch((error)=> console.log(error));
-        // RestClient.call('/api/client/getClientInfo')
-        //     .then((result) => this.usersList = result)
-        //     .catch((error) => console.log(error))
-
-
 
     }
 
@@ -174,43 +170,18 @@ class AppUsersForm extends BaseElement{
         }
 
     }
-
-
-    // _saveUserData(user) {
-    //     this.sendCustomEvent('save-user-data',user);
-    //     RestClient.call('/api/client/registerUser', user)
-    //         .then(() => {
-    //             this.usersList.push(user);
-    //             this.usersList = [...this.usersList];
-    //             console.log(this.usersList);
-    //             this.editUser = {
-    //                 firstName: '',
-    //                 lastName: '',
-    //                 email: '',
-    //
-    //             };
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //         })
-    // }
-
-
-    get _firstName(){
-        return this.editUser.firstName || this.firstName
+    setUserData(user){
+        for (const key in user){
+            this[key] = user[key]
+        }
     }
 
-    get _lastName(){
-        return this.editUser.lastName || this.lastName
-    }
 
-    get _email(){
-        return this.editUser.email || this.email
-    }
 
-    get _phoneNumber(){
-        return this.editUser.phoneNumber || this.phoneNumber
-    }
+
+
+
+
     connectedCallback() {
         super.connectedCallback();
     }

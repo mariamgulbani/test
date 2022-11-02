@@ -11,8 +11,10 @@ class AppUsersModule extends BaseElement{
     render(){
         return html`
             <app-users-form
+                    id="form"
             .editUser="${this.editUser}"></app-users-form>
             <app-users-list
+                    
             .usersList="${this.usersList}"></app-users-list>
         `
     }
@@ -34,40 +36,37 @@ class AppUsersModule extends BaseElement{
     connectedCallback() {
         super.connectedCallback();
         this.addEventListener('save-user-data',async (event) => {
-            // console.log(event.detail);
+
             await this._saveUserData(event.detail);
-            //await this._loadUserList(event.detail);
+
 
         });
         this.addEventListener('edit-user-data',async (event) => {
-            // console.log(event.detail);
-            //console.log(this.editUser);
-            //console.log(this.usersList)
+
             await this._editUserData(event.detail);
         });
         this.addEventListener('delete-user-data',async (event) => {
             console.log(event.detail);
-            //console.log(this.editUser);
-            //console.log(this.usersList)
             await this._deleteUserData(event.detail);
         })
+        this._getUsersList();
+
 
     }
 
     _editUserData(user) {
 
-        this.editUser=user;
-        RestClient.call('/api/client/getClientInfo')
-            .then((result) => this.usersList = result)
-            .catch((error) => console.log(error));
+        this.shadowRoot.getElementById('form').setUserData(user);
+
 
 
     }
-    _deleteUserData(test){
-        RestClient.call('/api/client/deleteClientData',test)
-            .then((result) => console.log(result))
+    _deleteUserData(user){
+        const _id = user._id
+        RestClient.call('/api/client/deleteClientData', {_id})
+            .then(() =>   this._getUsersList())
             .catch((error) => console.log(error));
-        console.log(test._id)
+
 
     }
 
@@ -75,15 +74,19 @@ class AppUsersModule extends BaseElement{
     _saveUserData(user){
         RestClient.call('/api/client/registerUser',user)
             .then(()=> {
-                this.usersList.push(user);
+                this._getUsersList();
             })
             .catch((error)=> {console.log(error)});
+
+
+
+
+
+    }
+    _getUsersList(){
         RestClient.call('/api/client/getClientInfo')
             .then((result) => this.usersList = result)
             .catch((error) => console.log(error));
-
-
-
     }
 
 

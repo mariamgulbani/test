@@ -50,37 +50,13 @@ class AppUsersList extends BaseElement{
                 </div>`)}
         `;
     }
-    // render (){
-    //     return html`
-    //     <div class="title"> Users List</div>
-    //     <input class="filter"
-    //     placeholder="Filter"
-    //     @input="${(event)=> this.searchTerm = event.target.value}">
-    //     ${this.users.filter(((item) => this.filter(item))).map((user) => html`
-    //     <div class="user-list">
-    //         <div class="list-item" >
-    //             ${user.firstName}
-    //         </div>
-    //         <div class="list-item" >
-    //             ${user.lastName}
-    //         </div>
-    //         <div class="list-item" >
-    //             ${user.email}
-    //         </div>
-    //         <div class="list-item" >
-    //             ${user.phoneNumber}
-    //         </div>
-    //         <button @click="${()=> this._editUser(user)}">Edit</button>
-    //              <button >Delete</button>
-    //          </div>`)}
-    //     `;
-    // }
+
     filter(item){
         if(!this.searchTerm){
             return true;
         }
         const regex = new RegExp(this.searchTerm,'i');
-        console.log(regex, item.firstName)
+        //console.log(regex, item.firstName)
         return regex.test(item.firstName) || regex.test(item.lastName) || regex.test(item.email) || regex.test(item.phoneNumber);
     }
 
@@ -96,21 +72,16 @@ class AppUsersList extends BaseElement{
 
     }
 
-    getUsersList() {
-        RestClient.call('/api/client/getClientInfo')
-            .then((result) => this.usersList = result)
-            .catch((error) => console.log(error))
-    }
+
 
     constructor() {
         super();
-        // this.usersList = [];
         this.usersList=[];
     }
 
     connectedCallback() {
         super.connectedCallback();
-        this.getUsersList()
+
     }
 
 
