@@ -1,5 +1,5 @@
 import {BaseElement, css, html} from "../../core/base-element.js";
-import {RestClient} from "../../core/rest.js";
+
 
 
 class AppUsersList extends BaseElement{
@@ -12,6 +12,7 @@ class AppUsersList extends BaseElement{
             display: flex;
             justify-content: center;
             align-items: center;
+            
           }
           .list-item{
             padding: 20px;
@@ -56,7 +57,6 @@ class AppUsersList extends BaseElement{
             return true;
         }
         const regex = new RegExp(this.searchTerm,'i');
-        //console.log(regex, item.firstName)
         return regex.test(item.firstName) || regex.test(item.lastName) || regex.test(item.email) || regex.test(item.phoneNumber);
     }
 

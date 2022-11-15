@@ -1,5 +1,5 @@
 import {BaseElement, css, html} from "../../core/base-element.js";
-import {RestClient} from "../../core/rest.js";
+
 
 
 
@@ -116,7 +116,6 @@ class AppUsersForm extends BaseElement{
         this.email = '';
         this.phoneNumber = '';
         this.editUser= {};
-        this._id ='';
 
     }
 
@@ -133,7 +132,15 @@ class AppUsersForm extends BaseElement{
             _id: this._id,
         };
         this.sendCustomEvent('save-user-data',user);
+        this._clearData();
 
+    }
+
+    _clearData(){
+        this.firstName='';
+        this.lastName='';
+        this.phoneNumber='';
+        this.email='';
     }
 
     static get validation() {

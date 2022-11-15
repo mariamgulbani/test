@@ -1,11 +1,12 @@
 import {BaseElement,html,css} from "./core/base-element.js";
 import './modules/users/app-users-module.js';
 import './modules/chat/app-chat-module.js';
-import {RestClient} from "./core/rest.js";
+
 
 const tabs = {
     users: 'users',
-    chat: 'chat'
+    chat: 'chat',
+    publicChat: 'publicChat'
 }
 
 class AppRoot extends BaseElement{

@@ -23,14 +23,12 @@ class AppUsersModule extends BaseElement{
         return {
             editUser:{type: Object},
             usersList: {type: Array},
-            // deleteUser: {type: Array}
         }
     }
     constructor() {
         super();
         this.usersList = [];
         this.editUser ={};
-        // this.deleteUser =[];
     }
 
     connectedCallback() {
@@ -40,7 +38,10 @@ class AppUsersModule extends BaseElement{
             await this._saveUserData(event.detail);
 
 
+
+
         });
+
         this.addEventListener('edit-user-data',async (event) => {
 
             await this._editUserData(event.detail);
@@ -73,16 +74,17 @@ class AppUsersModule extends BaseElement{
 
     _saveUserData(user){
         RestClient.call('/api/client/registerUser',user)
-            .then(()=> {
-                this._getUsersList();
-            })
-            .catch((error)=> {console.log(error)});
-
-
-
+            .then(()=>
+                this._getUsersList()
+            )
+            .catch((error)=> console.log(error));
 
 
     }
+
+
+
+
     _getUsersList(){
         RestClient.call('/api/client/getClientInfo')
             .then((result) => this.usersList = result)
